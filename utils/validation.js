@@ -33,17 +33,17 @@ const movieDataValidation = celebrate({
     year: Joi.number().required(),
     description: Joi.string().min(2).max(200).required(),
     image: Joi.string().required().regex(LINK_REGEX),
-    trailer: Joi.string().required().regex(LINK_REGEX),
+    trailerLink: Joi.string().required().regex(LINK_REGEX),
     nameRU: Joi.string().min(2).max(30).required(),
     nameEN: Joi.string().min(2).max(30).required(),
     thumbnail: Joi.string().required().regex(LINK_REGEX),
-    movieId: Joi.string().length(24).hex().required(),
+    movieId: Joi.number().required(),
   }),
 });
 
 const movieIdValidation = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().length(24).hex().required(),
+    movieId: Joi.string().length(24).hex().required(),
   }),
 });
 

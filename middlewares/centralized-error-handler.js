@@ -7,11 +7,13 @@ const centralizedErrorHandler = (err, req, res, next) => {
 
   if (!statusCode) { statusCode = INTERNAL_SERVER_ERROR_STATUS_CODE; }
 
-  return res
+  res
     .status(statusCode)
     .send(
       { message: statusCode !== 500 ? message : 'Произошла ошибка на сервере' },
     );
+
+  next();
 };
 
 module.exports = centralizedErrorHandler;

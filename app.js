@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-// const path = require("path");
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
@@ -16,10 +15,10 @@ const app = express();
 
 // Массив доменов, с которых разрешены кросс-доменные запросы
 const allowedCors = [
-  // 'https://mesto-anchikfyz.nomoredomainsicu.ru',
-  // 'http://mesto-anchikfyz.nomoredomainsicu.ru',
-  // 'https://api.mesto-anchikfyz.nomoredomainsicu.ru',
-  // 'http://api.mesto-anchikfyz.nomoredomainsicu.ru',
+  'https://movie-anchikfyz.nomoredomainsrocks.ru',
+  'http://movie-anchikfyz.nomoredomainsrocks.ru',
+  'https://api.movie-anchikfyz.nomoredomainsrocks.ru',
+  'http://api.movie-anchikfyz.nomoredomainsrocks.ru',
   'http://localhost:3001',
 ];
 

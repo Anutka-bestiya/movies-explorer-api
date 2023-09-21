@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
@@ -17,8 +16,6 @@ const app = express();
 const allowedCors = [
   'https://movie-anchikfyz.nomoredomainsrocks.ru',
   'http://movie-anchikfyz.nomoredomainsrocks.ru',
-  'https://api.movie-anchikfyz.nomoredomainsrocks.ru',
-  'http://api.movie-anchikfyz.nomoredomainsrocks.ru',
   'http://localhost:3001',
 ];
 
@@ -27,10 +24,7 @@ app.use(cors({
   credentials: true,
 }));
 
-mongoose
-  .connect(MONGO_URL)
-  .then(() => console.log('БД подключена'))
-  .catch(() => console.log('не удалось подключиться к БД'));
+mongoose.connect(MONGO_URL);
 
 app.use(requestLogger); // подключаем логгер запросов
 app.use(helmet());
@@ -46,7 +40,4 @@ app.use(errorLogger); // подключаем логгер ошибок
 app.use(errors()); // обработчик ошибок celebrate
 app.use(centralizedErrorHandler); // наш централизованный обработчик
 
-app.listen(PORT, () => {
-  // Если всё работает, консоль покажет, какой порт приложение слушает
-  console.log('App listening on port ', PORT);
-});
+app.listen(PORT);

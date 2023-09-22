@@ -11,6 +11,13 @@ const {
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
 const ConflictError = require('../errors/conflict-err');
+const {
+  BAD_DATA,
+  NOT_FOUND_ID,
+  CONFLICT_EMAIL,
+  LOGIN,
+  LOGOUT,
+} = require('../utils/message');
 
 // Создание нового пользователя
 function createUser(req, res, next) {
@@ -35,12 +42,13 @@ function createUser(req, res, next) {
         })
         .catch((err) => {
           if (err.code === 11000) {
-            next(new ConflictError('Пользователь с таким email существует'));
+            next(new ConflictError(CONFLICT_EMAIL));
           } else if (err instanceof mongoose.Error.ValidationError) {
-            next(new BadRequestError('При создании пользователя переданы некорректные данные'));
+            next(new BadRequestError(BAD_DATA));
           } else { next(err); }
         });
-    });
+    })
+    .catch(next);
 }
 
 // Получение персональных данныех пользователя
@@ -50,7 +58,7 @@ const getUserProfile = (req, res, next) => {
   User.findById(id)
     .then((user) => {
       if (!user) {
-        return next(new NotFoundError('Не найден пользователь с таким id'));
+        return next(new NotFoundError(NOT_FOUND_ID));
       }
       return res.status(OK_STATUS_CODE).send(user);
     })
@@ -64,13 +72,15 @@ const updateProfile = (req, res, next) => {
   User.findByIdAndUpdate(owner, { email, name }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        return next(new NotFoundError('Не найден пользователь с таким id'));
+        return next(new NotFoundError(NOT_FOUND_ID));
       }
       return res.status(OK_STATUS_CODE).send(user);
     })
     .catch((err) => {
-      if (err instanceof mongoose.Error.ValidationError) {
-        next(new BadRequestError('При обновлении данных профиля переданы некорректные данные'));
+      if (err.code === 11000) {
+        next(new ConflictError(CONFLICT_EMAIL));
+      } else if (err instanceof mongoose.Error.ValidationError) {
+        next(new BadRequestError(BAD_DATA));
       } else {
         next(err);
       }
@@ -94,7 +104,7 @@ const login = (req, res, next) => {
           sameSite: true, // отправлять куки только если запрос пришел с того же домена, защита CSRF
         })
         // аутентификация успешна! пользователь в переменной user
-        .send({ _id: user._id, message: 'Авторизация прошла успешно!' });
+        .send({ _id: user._id, message: LOGIN });
     })
     .catch(next);
 };
@@ -102,7 +112,7 @@ const login = (req, res, next) => {
 const logout = (req, res, next) => {
   res
     .clearCookie('jwt')
-    .send({ message: 'Выход выполнен успешно!' })
+    .send({ message: LOGOUT })
     .catch(next);
 };
 

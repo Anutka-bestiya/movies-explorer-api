@@ -17,7 +17,7 @@ router.use('/crash-test', (req, res, next) => {
     next(new Error('Сервер сейчас упадет'));
   }, 0);
 });
-router.use('/*', (req, res, next) => {
+router.use('/*', auth, (req, res, next) => {
   next(new NotFoundError('Страница не найдена.'));
 });
 

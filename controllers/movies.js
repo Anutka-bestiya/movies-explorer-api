@@ -7,11 +7,21 @@ const {
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
 const ForbiddenError = require('../errors/forbidden-err');
+const {
+  BAD_DATA,
+  NOT_FOUND_DATA,
+  NOT_FOUND_ID,
+  FORBIDDEN,
+} = require('../utils/message');
 
 // Получение movies
 const getMovies = (req, res, next) => {
-  Movie.find({})
-    .then((movies) => res.status(OK_STATUS_CODE).send(movies))
+  const owner = req.user._id; // используем req.user
+  Movie.find({ owner })
+    .then((movies) => {
+      if (!movies) { next(new NotFoundError(NOT_FOUND_DATA)); }
+      res.status(OK_STATUS_CODE).send(movies);
+    })
     .catch(next);
 };
 
@@ -48,7 +58,7 @@ const createMovie = (req, res, next) => {
     .then((movie) => res.status(HTTP_CREATED_STATUS_CODE).send(movie))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        next(new BadRequestError('При создании карточки переданы некорректные данные'));
+        next(new BadRequestError(BAD_DATA));
       } else { next(err); }
     });
 };
@@ -62,12 +72,12 @@ const deleteMovie = (req, res, next) => {
     .findById(movieId)
     .then((movie) => {
       if (!movie) {
-        throw new NotFoundError('Не найдена карточка с таким id');
+        throw new NotFoundError(NOT_FOUND_ID);
       }
       const { owner: movieOwner } = movie;
 
       if (movieOwner.valueOf() !== someOwner) {
-        throw new ForbiddenError('Карточку может удалить только ее автор');
+        throw new ForbiddenError(FORBIDDEN);
       }
       Movie.deleteOne(movie)
         .then((movieDel) => {
@@ -77,7 +87,7 @@ const deleteMovie = (req, res, next) => {
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
-        next(new BadRequestError('При попытке удаления фильма переданы некорректные данные'));
+        next(new BadRequestError(BAD_DATA));
       } else { next(err); }
     });
 };

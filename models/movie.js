@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 const { LINK_REGEX } = require('../utils/regex');
+const {
+  BAD_URL,
+} = require('../utils/message');
 
 const movieSchema = new mongoose.Schema({
   country: {
@@ -27,8 +30,7 @@ const movieSchema = new mongoose.Schema({
     required: true, // обязательное поле
     validate: {
       validator: (url) => LINK_REGEX.test(url),
-      message:
-        'Введенный URL адрес некорректный, введите корректный URL',
+      message: BAD_URL,
     },
   }, // ссылка на постер к фильму. Запишите её URL-адресом.
   trailerLink: {
@@ -36,8 +38,7 @@ const movieSchema = new mongoose.Schema({
     required: true, // обязательное поле
     validate: {
       validator: (url) => LINK_REGEX.test(url),
-      message:
-        'Введенный URL адрес некорректный, введите корректный URL',
+      message: BAD_URL,
     },
   }, // ссылка на трейлер фильма. Запишите её URL-адресом.
   thumbnail: {
@@ -45,8 +46,7 @@ const movieSchema = new mongoose.Schema({
     required: true, // обязательное поле
     validate: {
       validator: (url) => LINK_REGEX.test(url),
-      message:
-        'Введенный URL адрес некорректный, введите корректный URL',
+      message: BAD_URL,
     },
   }, // миниатюрное изображение постера к фильму. Запишите её URL-адресом.
   owner: {

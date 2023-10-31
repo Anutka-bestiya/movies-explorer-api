@@ -1,28 +1,31 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const helmet = require('helmet');
-const cookieParser = require('cookie-parser');
-const { errors } = require('celebrate');
-const cors = require('cors');
-const limiter = require('./middlewares/limiter');
-const routes = require('./routes/index');
-const centralizedErrorHandler = require('./middlewares/centralized-error-handler');
-const { requestLogger, errorLogger } = require('./middlewares/logger');
-const { PORT, MONGO_URL } = require('./config');
+const express = require("express");
+const mongoose = require("mongoose");
+const helmet = require("helmet");
+const cookieParser = require("cookie-parser");
+const { errors } = require("celebrate");
+const cors = require("cors");
+const limiter = require("./middlewares/limiter");
+const routes = require("./routes/index");
+const centralizedErrorHandler = require("./middlewares/centralized-error-handler");
+const { requestLogger, errorLogger } = require("./middlewares/logger");
+const { PORT, MONGO_URL } = require("./config");
 
 const app = express();
 
 // Массив доменов, с которых разрешены кросс-доменные запросы
 const allowedCors = [
-  'https://movie-anchikfyz.nomoredomainsrocks.ru',
-  'http://movie-anchikfyz.nomoredomainsrocks.ru',
-  'http://localhost:3001',
+  "https://movie-anchikfyz.nomoredomainsrocks.ru",
+  "http://movie-anchikfyz.nomoredomainsrocks.ru",
+  "http://localhost:3000",
+  "http://localhost:3001",
 ];
 
-app.use(cors({
-  origin: allowedCors,
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: allowedCors,
+    credentials: true,
+  })
+);
 
 mongoose.connect(MONGO_URL);
 

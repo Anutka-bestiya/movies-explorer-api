@@ -7,10 +7,12 @@ const {
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
 const ForbiddenError = require('../errors/forbidden-err');
+const ConflictError = require('../errors/conflict-err');
 const {
   BAD_DATA,
   NOT_FOUND_DATA,
   NOT_FOUND_ID,
+  CONFLICT_MOVIE,
   FORBIDDEN,
 } = require('../utils/message');
 
@@ -57,7 +59,9 @@ const createMovie = (req, res, next) => {
   })
     .then((movie) => res.status(HTTP_CREATED_STATUS_CODE).send(movie))
     .catch((err) => {
-      if (err instanceof mongoose.Error.ValidationError) {
+      if (err.code === 11000) {
+        next(new ConflictError(CONFLICT_MOVIE));
+      } else if (err instanceof mongoose.Error.ValidationError) {
         next(new BadRequestError(BAD_DATA));
       } else { next(err); }
     });

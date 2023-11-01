@@ -1,6 +1,7 @@
 const BAD_DATA = 'Переданы некорректные данные';
 const NOT_FOUND_DATA = 'Объектов не найдено';
 const NOT_FOUND_ID = 'Не найден объект с таким id';
+const CONFLICT_MOVIE = 'Фильм с таким id существует';
 const CONFLICT_EMAIL = 'Пользователь с таким email существует';
 const BAD_AUTH_DATA = 'Неправильные почта или пароль';
 const LOGIN = 'Авторизация прошла успешно!';

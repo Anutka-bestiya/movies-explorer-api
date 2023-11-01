@@ -21,24 +21,38 @@ const {
 
 // Создание нового пользователя
 function createUser(req, res, next) {
-  const { email, password, name } = req.body;
+  const { name, email, password } = req.body;
   bcrypt
     .hash(password, 10)
     .then((hash) => {
       User
         .create({
+          name,
           email,
           password: hash, // записываем хеш в базу
-          name,
         })
         .then((newUser) => {
-          const { _id } = newUser;
-
-          res.status(HTTP_CREATED_STATUS_CODE).send({
-            email,
-            name,
-            _id,
-          });
+          // создадим токен
+          const token = jwt.sign(
+            { _id: newUser._id },
+            JWT_SECRET,
+            { expiresIn: '7d' },
+          );
+          return res
+            .cookie('jwt', token, {
+              maxAge: 3600000 * 24 * 7,
+              httpOnly: true,
+              sameSite: true, // отправлять куки только если запрос пришел с того же домена,
+              // защита CSRF
+            })
+          // аутентификация успешна! пользователь в переменной user
+            .status(HTTP_CREATED_STATUS_CODE)
+            .send({
+              name,
+              email,
+              _id: newUser._id,
+              message: LOGIN,
+            });
         })
         .catch((err) => {
           if (err.code === 11000) {

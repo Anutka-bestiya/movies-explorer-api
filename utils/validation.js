@@ -26,7 +26,7 @@ const userDataValidation = celebrate({
 const movieDataValidation = celebrate({
   body: Joi.object().keys({
     // country, director, duration, year, description, image,
-    // trailer, nameRU, nameEN и thumbnail, movieId
+    // trailer, nameRU, nameEN и thumbnail, movieId.
     country: Joi.string().min(2).max(100).required(),
     director: Joi.string().min(2).max(60).required(),
     duration: Joi.number().required(),

@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs"); // импортируем bcrypt
-const UnauthorizedError = require("../errors/unauthorized-err");
-const { BAD_AUTH_DATA, BAD_EMAIL } = require("../utils/message");
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs'); // импортируем bcrypt
+const UnauthorizedError = require('../errors/unauthorized-err');
+const { BAD_AUTH_DATA, BAD_EMAIL } = require('../utils/message');
 
 const userSchema = new mongoose.Schema(
   {
@@ -21,17 +21,17 @@ const userSchema = new mongoose.Schema(
     },
     name: {
       type: String, // строка
-      minlength: [2, "Имя пользователя должно быть длиной от 2 символов"],
-      maxlength: [30, "Имя пользователя должно быть длиной до 30 символов"],
+      minlength: [2, 'Имя пользователя должно быть длиной от 2 символов'],
+      maxlength: [30, 'Имя пользователя должно быть длиной до 30 символов'],
       required: true, // обязательное поле
     },
   },
-  { versionKey: false }
+  { versionKey: false },
 );
 
 userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email })
-    .select("+password")
+    .select('+password')
     .then((user) => {
       if (!user) {
         return Promise.reject(new UnauthorizedError(BAD_AUTH_DATA));
@@ -47,4 +47,4 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     });
 };
 
-module.exports = mongoose.model("user", userSchema);
+module.exports = mongoose.model('user', userSchema);

@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const {
-  PORT = 4000, MONGO_URL, JWT_SECRET, NODE_ENV,
+  PORT = 3001, MONGO_URL, JWT_SECRET, NODE_ENV,
 } = process.env;
 
 module.exports = {

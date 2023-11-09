@@ -28,7 +28,7 @@ const movieDataValidation = celebrate({
     // country, director, duration, year, description, image,
     // trailer, nameRU, nameEN и thumbnail, movieId
     country: Joi.string().min(2).max(100).required(),
-    director: Joi.string().min(2).max(60).required(),
+    director: Joi.string().min(2).max(100).required(),
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().min(2).max(2000).required(),
